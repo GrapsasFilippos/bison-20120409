@@ -1,1 +1,6 @@
 *~
+20120409
+lex.yy.c
+parser.output
+parser.tab.c
+parser.tab.h

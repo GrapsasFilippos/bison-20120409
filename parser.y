@@ -42,6 +42,9 @@ extern int linesCount;
 %token TINTEGER
 %token TFLOAT
 
+%left PLUS MINUS
+%left TIMES DIVIDE
+
 %type<str> Declaration-Identifiers
 %type<str> Identifier
 %type<str> Type
@@ -113,6 +116,11 @@ Assignment:
 Computation:
   Number
   | Identifier
+  | LPAR Computation RPAR
+  | Computation PLUS Computation
+  | Computation MINUS Computation
+  | Computation TIMES Computation
+  | Computation DIVIDE Computation
 ;
 
 Identifier:

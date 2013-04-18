@@ -6,6 +6,7 @@ int main(int a, float b) {
   float a, b, p, fa, fb, fp, E;
 
   E = 0.001;
-  n = 20;
-  a = 0;
+
+  p=(a+b)/2;
+  fa = a * a - 2;
 }
