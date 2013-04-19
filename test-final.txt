@@ -2,7 +2,7 @@ int main()
 {
 
   int i = 1;
-  double a, b, p, fa, fb, fp, E;
+  float a, b, p, fa, fb, fp, E;
 
   E = 0.001;
   n = 20;
@@ -25,6 +25,5 @@ int main()
     a=p;
    }
    i = i + 1;
-  };
+  }
 }
-

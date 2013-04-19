@@ -88,6 +88,8 @@ Phrases:
   | Phrase SEMICOLON Phrases
   | Iteration
   | Iteration Phrases
+  | Conditional
+  | Conditional Phrases
 ;
 
 Phrase:
@@ -97,7 +99,21 @@ Phrase:
 ;
 
 Iteration:
-  WHILE LPAR Computation RPAR Block
+  WHILE LPAR Computation RPAR {
+    printf("|\t|\t|While>\n");
+  }
+  Block
+;
+
+Conditional:
+  IF LPAR Computation RPAR {
+    printf("|\t|\t|Conditional>\n");
+  }
+  Block Conditional-Else
+;
+
+Conditional-Else:
+  | ELSE Block
 ;
 
 Initialization:

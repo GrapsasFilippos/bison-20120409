@@ -12,5 +12,12 @@ int main(int a, float b) {
 
   while(((b-a)/2>E) && (i<=n) && (fp != 0)) {
     p=(a+b)/2;
+    if(fa*fp<0) {
+      b=p;
+    }
+    else {
+      a=p;
+    }
+    i = i + 1;
   }
 }
