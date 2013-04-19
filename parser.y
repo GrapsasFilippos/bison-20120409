@@ -42,6 +42,10 @@ extern int linesCount;
 %token TINTEGER
 %token TFLOAT
 
+%left LOR
+%left LAND
+%left EQUAL NOTEQUAL
+%left LESS LEQ GREATER GEQ
 %left PLUS MINUS
 %left TIMES DIVIDE
 
@@ -82,12 +86,18 @@ PhraseList:
 Phrases:
   Phrase SEMICOLON
   | Phrase SEMICOLON Phrases
+  | Iteration
+  | Iteration Phrases
 ;
 
 Phrase:
   Initialization
   | Declaration
   | Assignment
+;
+
+Iteration:
+  WHILE LPAR Computation RPAR Block
 ;
 
 Initialization:
@@ -121,6 +131,14 @@ Computation:
   | Computation MINUS Computation
   | Computation TIMES Computation
   | Computation DIVIDE Computation
+  | Computation LOR Computation
+  | Computation LAND Computation
+  | Computation EQUAL Computation
+  | Computation NOTEQUAL Computation
+  | Computation LESS Computation
+  | Computation LEQ Computation
+  | Computation GREATER Computation
+  | Computation GEQ Computation
 ;
 
 Identifier:
@@ -152,7 +170,7 @@ Number:
 
 %%
 int yyerror(char *s) {
-  printf("GFError@%i: %s\n", linesCount, s);
+  printf("\nGFError@%i: %s\n", linesCount, s);
   return -1;
 }
 

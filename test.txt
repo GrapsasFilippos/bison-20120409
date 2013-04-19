@@ -9,4 +9,8 @@ int main(int a, float b) {
 
   p=(a+b)/2;
   fa = a * a - 2;
+
+  while(((b-a)/2>E) && (i<=n) && (fp != 0)) {
+    p=(a+b)/2;
+  }
 }
