@@ -1,6 +1,14 @@
 %{
 #include "parser.tab.h"
 
+
+#if defined(DBML) || defined(DBMA)
+  #define DBM(...) printf(__VA_ARGS__);
+#else
+  #define DBM(...)
+#endif
+
+
 int linesCount = 1;
 %}
 
@@ -18,169 +26,169 @@ float {integer}"."{integer}
 "\r" {}
 
 "(" {
-  printf("<(>\n");
+  DBM("<(>\n");
 
   return LPAR;
 }
 
 ")" {
-  printf("<)>\n");
+  DBM("<)>\n");
 
   return RPAR;
 }
 
 "{" {
-  printf("<{>\n");
+  DBM("<{>\n");
 
   return LBRACE;
 }
 
 "}" {
-  printf("<}>\n");
+  DBM("<}>\n");
 
   return RBRACE;
 }
 
 "[" {
-  printf("<[>\n");
+  DBM("<[>\n");
 
   return LBRACK;
 }
 
 "]" {
-  printf("<]>\n");
+  DBM("<]>\n");
 
   return RBRACK;
 }
 
 "==" {
-  printf("<==>\n");
+  DBM("<==>\n");
 
   return EQUAL;
 }
 
 "=" {
-  printf("<=>\n");
+  DBM("<=>\n");
 
   return ASSIGN;
 }
 
 ";" {
-  printf("<;>\n");
+  DBM("<;>\n");
 
   return SEMICOLON;
 }
 
 "," {
-  printf("<,>\n");
+  DBM("<,>\n");
 
   return COMMA;
 }
 
 "." {
-  printf("<.>\n");
+  DBM("<.>\n");
 
   return DOT;
 }
 
 "+" {
-  printf("<+>\n");
+  DBM("<+>\n");
 
   return PLUS;
 }
 
 "-" {
-  printf("<->\n");
+  DBM("<->\n");
 
   return MINUS;
 }
 
 "*" {
-  printf("<*>\n");
+  DBM("<*>\n");
 
   return TIMES;
 }
 
 "/" {
-  printf("</>\n");
+  DBM("</>\n");
 
   return DIVIDE;
 }
 
 "!=" {
-  printf("<!=>\n");
+  DBM("<!=>\n");
 
   return NOTEQUAL;
 }
 
 "<" {
-  printf("<<>\n");
+  DBM("<<>\n");
 
   return LESS;
 }
 
 ">" {
-  printf("<>>\n");
+  DBM("<>>\n");
 
   return GREATER;
 }
 
 "<=" {
-  printf("<<=>\n");
+  DBM("<<=>\n");
 
   return LEQ;
 }
 
 ">=" {
-  printf("<>=>\n");
+  DBM("<>=>\n");
 
   return GEQ;
 }
 
 "&&" {
-  printf("<&&>\n");
+  DBM("<&&>\n");
 
   return LAND;
 }
 
 "||" {
-  printf("<||>\n");
+  DBM("<||>\n");
 
   return LOR;
 }
 
 "while" {
-  printf("<while>\n");
+  DBM("<while>\n");
 
   return WHILE;
 }
 
 "if" {
-  printf("<if>\n");
+  DBM("<if>\n");
 
   return IF;
 }
 
 "else" {
-  printf("<else>\n");
+  DBM("<else>\n");
 
   return ELSE;
 }
 
 "int" {
-  printf("<int>\n");
+  DBM("<int>\n");
 
   return TINTEGER;
 }
 
 "float" {
-  printf("<float>\n");
+  DBM("<float>\n");
 
   return TFLOAT;
 }
 
 {integer} {
-  printf("<int: %s>\n", yytext);
+  DBM("<int: %s>\n", yytext);
 
   yylval.num = atof(yytext);
 
@@ -188,7 +196,7 @@ float {integer}"."{integer}
 }
 
 {float} {
-  printf("<float: %s>\n", yytext);
+  DBM("<float: %s>\n", yytext);
 
   yylval.num = atof(yytext);
 
@@ -196,7 +204,7 @@ float {integer}"."{integer}
 }
 
 {identifier} {
-  printf("<identifier: %s>\n", yytext);
+  DBM("<identifier: %s>\n", yytext);
 
   yylval.str = malloc(strlen(yytext));
   strncpy(yylval.str, yytext, strlen(yytext));

@@ -2,6 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 
+
+#if defined(DBMP) || defined(DBMA)
+  #define DBM(...) printf(__VA_ARGS__);
+#else
+  #define DBM(...)
+#endif
+
+
 extern int linesCount;
 %}
 
@@ -57,7 +65,7 @@ extern int linesCount;
 %%
 Procedure:
   Type Identifier LPAR ArgumentList RPAR {
-    printf("|\t|\t|Procedure> %s(): %s\n", $2, $1);
+    DBM("|\t|\t|Procedure> %s(): %s\n", $2, $1);
   }
   Block
 ;
@@ -100,14 +108,14 @@ Phrase:
 
 Iteration:
   WHILE LPAR Computation RPAR {
-    printf("|\t|\t|While>\n");
+    DBM("|\t|\t|While>\n");
   }
   Block
 ;
 
 Conditional:
   IF LPAR Computation RPAR {
-    printf("|\t|\t|Conditional>\n");
+    DBM("|\t|\t|Conditional>\n");
   }
   Block Conditional-Else
 ;
@@ -118,13 +126,13 @@ Conditional-Else:
 
 Initialization:
   Type Identifier ASSIGN Computation  {
-    printf("|\t|\t|Initialization> %s: %s\n", $2, $1);
+    DBM("|\t|\t|Initialization> %s: %s\n", $2, $1);
   }
 ;
 
 Declaration:
   Type Declaration-Identifiers {
-    printf("|\t|\t|Declaration> %s: %s\n", $2, $1);
+    DBM("|\t|\t|Declaration> %s: %s\n", $2, $1);
   }
 ;
 
@@ -135,7 +143,7 @@ Declaration-Identifiers:
 
 Assignment:
   Identifier ASSIGN Computation {
-    printf("|\t|\t|Assignment>\n");
+    DBM("|\t|\t|Assignment>\n");
   }
 ;
 
@@ -159,27 +167,27 @@ Computation:
 
 Identifier:
   IDENTIFIER {
-    printf("|\t|Identifier> %s\n", $1);
+    DBM("|\t|Identifier> %s\n", $1);
   }
 ;
 
 Type:
   TINTEGER {
-    printf("|\t|Type> int\n");
+    DBM("|\t|Type> int\n");
     $$ = "int";
   }
   | TFLOAT {
-    printf("|\t|Type> float\n");
+    DBM("|\t|Type> float\n");
     $$ = "float";
   }
 ;
 
 Number:
   INTEGER {
-    printf("|\t|Number> %f\n", $1);
+    DBM("|\t|Number> %f\n", $1);
   }
   | FLOAT {
-    printf("|\t|Number> %f\n", $1);
+    DBM("|\t|Number> %f\n", $1);
   }
 ;
 
