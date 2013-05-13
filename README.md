@@ -17,4 +17,4 @@ Select the level of verbose messages at compile time:
 * `DBMA` : for both
 
 For example:
-`make CFLAGS='-D DBML'`
+`make CPPFLAGS='-D DBML'`

@@ -3,14 +3,18 @@
 #include <string.h>
 
 
+extern "C" {
+  int yylex(void);
+  void yyerror(const char *s);
+}
+extern int linesCount;
+
+
 #if defined(DBMP) || defined(DBMA)
   #define DBM(...) printf(__VA_ARGS__);
 #else
   #define DBM(...)
 #endif
-
-
-extern int linesCount;
 %}
 
 
@@ -174,11 +178,11 @@ Identifier:
 Type:
   TINTEGER {
     DBM("|\t|Type> int\n");
-    $$ = "int";
+    $$ = (char *) "int";
   }
   | TFLOAT {
     DBM("|\t|Type> float\n");
-    $$ = "float";
+    $$ = (char *) "float";
   }
 ;
 
@@ -193,9 +197,8 @@ Number:
 
 
 %%
-int yyerror(char *s) {
+void yyerror(const char *s) {
   printf("\nGFError@%i: %s\n", linesCount, s);
-  return -1;
 }
 
 int main() {

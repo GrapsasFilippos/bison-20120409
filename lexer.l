@@ -2,6 +2,11 @@
 #include "parser.tab.h"
 
 
+extern "C" {
+  int yylex(void);
+}
+
+
 #if defined(DBML) || defined(DBMA)
   #define DBM(...) printf(__VA_ARGS__);
 #else
@@ -206,7 +211,7 @@ float {integer}"."{integer}
 {identifier} {
   DBM("<identifier: %s>\n", yytext);
 
-  yylval.str = malloc(strlen(yytext));
+  yylval.str = (char *) malloc(strlen(yytext));
   strncpy(yylval.str, yytext, strlen(yytext));
 
   return IDENTIFIER;
