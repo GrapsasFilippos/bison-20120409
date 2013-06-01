@@ -1,26 +1,13 @@
 %{
-#include <stdio.h>
-#include <string.h>
-
-
-extern "C" {
-  int yylex(void);
-  void yyerror(const char *s);
-}
-extern int linesCount;
-
-
-#if defined(DBMP) || defined(DBMA)
-  #define DBM(...) printf(__VA_ARGS__);
-#else
-  #define DBM(...)
-#endif
+#define PARSER_Y
+#include "parser.y.hpp"
 %}
 
 
 %union {
   char *str;
-  double num;
+  int iNum;
+  double dNum;
 }
 
 %token<str> IDENTIFIER
@@ -49,8 +36,8 @@ extern int linesCount;
 %token WHILE
 %token IF
 %token ELSE
-%token<num> INTEGER
-%token<num> FLOAT
+%token<dNum> INTEGER
+%token<dNum> FLOAT
 %token TINTEGER
 %token TFLOAT
 
@@ -63,13 +50,13 @@ extern int linesCount;
 
 %type<str> Declaration-Identifiers
 %type<str> Identifier
-%type<str> Type
+%type<iNum> Type
 
 
 %%
 Procedure:
-  Type Identifier LPAR ArgumentList RPAR {
-    DBM("|\t|\t|Procedure> %s(): %s\n", $2, $1);
+  DclOn Type Identifier DclOff LPAR ArgumentList RPAR {
+    DBM("|\t|\t|Procedure> %s(): %i\n", $3, $2);
   }
   Block
 ;
@@ -88,7 +75,7 @@ Arguments:
 ;
 
 Argument:
-  Type Identifier
+  DclOn Type Identifier DclOff
 ;
 
 PhraseList:
@@ -129,20 +116,35 @@ Conditional-Else:
 ;
 
 Initialization:
-  Type Identifier ASSIGN Computation  {
-    DBM("|\t|\t|Initialization> %s: %s\n", $2, $1);
+  DclOn Type Identifier DclOff ASSIGN Computation  {
+    DBM("|\t|\t|Initialization> %s: %i\n", $3, $2);
+    addIdC( $3, $2 );
   }
 ;
 
 Declaration:
-  Type Declaration-Identifiers {
-    DBM("|\t|\t|Declaration> %s: %s\n", $2, $1);
+  DclOn Type Declaration-Identifiers DclOff {
+    DBM("|\t|\t|Declaration> %s: %i\n", $3, $2);
+    string * str = 0;
+    while( (str = qStr.dequeue()) ) {
+      addIdS( str, $2 );
+      delete( str );
+    }
   }
 ;
 
+DclOn: { declaration = 1; };
+DclOff: { declaration = 0; };
+
 Declaration-Identifiers:
-  Identifier
-  |  Identifier COMMA Declaration-Identifiers
+  Identifier {
+    string * str = new string( $1 );
+    qStr.enqueue( str );
+  }
+  |  Identifier COMMA Declaration-Identifiers {
+    string * str = new string( $1 );
+    qStr.enqueue( str );
+  }
 ;
 
 Assignment:
@@ -172,17 +174,29 @@ Computation:
 Identifier:
   IDENTIFIER {
     DBM("|\t|Identifier> %s\n", $1);
+
+    string * str = new string( $1 );
+    Identifier * result = 0;
+    Identifier * id = new Identifier();
+    id->setKey( str );
+    result = (Identifier *)bst.search( id );
+    if( !declaration && !result) {
+      string error( "'" );
+      error.append( *str );
+      error.append( "' was not declared." );
+      yyerror( error.c_str() );
+    }
   }
 ;
 
 Type:
   TINTEGER {
     DBM("|\t|Type> int\n");
-    $$ = (char *) "int";
+    $$ = 1;
   }
   | TFLOAT {
     DBM("|\t|Type> float\n");
-    $$ = (char *) "float";
+    $$ = 2;
   }
 ;
 
@@ -197,11 +211,4 @@ Number:
 
 
 %%
-void yyerror(const char *s) {
-  printf("\nGFError@%i: %s\n", linesCount, s);
-}
-
-int main() {
-  yyparse();
-  return 0;
-}
+#include "parser.y.cpp"

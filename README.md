@@ -1,7 +1,12 @@
 Exercise about the compilers for college. Syntax analysis (using GNU Bison) for the code in the file: `test-final.txt`.
 
+### Download
+[bison-20120409](http://github.com/GrapsasFilippos/bison-20120409)  
+[GFQueue](http://github.com/GrapsasFilippos/GFQueue)  
+[GFBinarySearchTree](http://github.com/GrapsasFilippos/GFBinarySearchTree)
+
 ### Compile
-`make`
+`make CPPFLAGS='-I path/to/GFQueue -I path/to/GFBinarySearchTree'`
 
 ### Run
 `./bison-20120409 < test.txt`
@@ -16,5 +21,5 @@ Select the level of verbose messages at compile time:
 * `DBMP` : for the output of the syntax analyzer (by default) and
 * `DBMA` : for both
 
-For example:
-`make CPPFLAGS='-D DBML'`
+For example:  
+`make CPPFLAGS='-D DBML -I path/to/GFQueue -I path/to/GFBinarySearchTree'`

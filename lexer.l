@@ -195,7 +195,7 @@ float {integer}"."{integer}
 {integer} {
   DBM("<int: %s>\n", yytext);
 
-  yylval.num = atof(yytext);
+  yylval.dNum = atof(yytext);
 
   return INTEGER;
 }
@@ -203,7 +203,7 @@ float {integer}"."{integer}
 {float} {
   DBM("<float: %s>\n", yytext);
 
-  yylval.num = atof(yytext);
+  yylval.dNum = atof(yytext);
 
   return FLOAT;
 }
